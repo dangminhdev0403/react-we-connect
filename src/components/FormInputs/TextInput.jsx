@@ -9,7 +9,7 @@ const TextInput = ({ onChange, value, name, type = "text", error }) => {
         htmlInput: { className: "!p-0" },
       }}
       name={name}
-      value={value}
+      value={value ?? ""}
       onChange={onChange}
       type={type}
       error={error}

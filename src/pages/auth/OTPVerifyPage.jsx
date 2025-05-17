@@ -1,7 +1,6 @@
 import FormField from "@components/FormField";
 import OTPInput from "@components/FormInputs/OTPInput";
 import { Button, CircularProgress } from "@mui/material";
-import { login } from "@redux/slices/authSlice";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,7 +22,7 @@ const OTPVerifyPage = () => {
     setTimeout(() => {
       setIsLoading(false);
       if (formData.otp === "123456") {
-        dispatch(login({ email: location?.state?.email }));
+        // dispatch(login({ email: location?.state?.email }));
         dispatch(
           openSnackbar({ type: "success", message: "Xác thực thành công!" })
         );

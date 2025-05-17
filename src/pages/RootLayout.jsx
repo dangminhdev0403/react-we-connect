@@ -1,23 +1,24 @@
 import { Alert, Snackbar } from "@mui/material";
-import { Suspense, useState } from "react";
+import { closeSnackbar } from "@redux/slices/snackbarSlice";
+import { Suspense } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
-  // Mô phỏng trạng thái snackbar tĩnh
-  const [open, setOpen] = useState(true);
-  const type = "success"; // Có thể là "error", "info", "warning", v.v.
-  const message = "This is a static snackbar message";
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const { open, type, message } = useSelector((state) => state.snackbar);
+  const dispath = useDispatch();
   return (
     <div>
       <Suspense fallback={<p>Loading</p>}>
         <Outlet />
       </Suspense>
-      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={() => {
+          dispath(closeSnackbar());
+        }}
+      >
         <Alert severity={type} variant="filled" sx={{ width: "100%" }}>
           {message}
         </Alert>

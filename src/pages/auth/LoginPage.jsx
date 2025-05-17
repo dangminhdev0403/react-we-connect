@@ -2,12 +2,19 @@ import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@mui/material";
+import { authSlice } from "@redux/slices/authSlice";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
+import { useLoginMutation } from "@services/rootApi";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ Gọi hook ở trên cùng
+  const [login, { data, error, isError, isSuccess }] = useLoginMutation();
 
   const formSchema = yup.object().shape({
     email: yup
@@ -24,21 +31,37 @@ const LoginPage = () => {
     control,
     handleSubmit,
     formState: { errors },
-    getValues,
   } = useForm({
     resolver: yupResolver(formSchema),
   });
 
   function onSubmit(formData) {
-    console.log("Mock login:", formData);
-
-    // Navigate to OTP page with email (simulate login)
-    navigate("/verify-otp", {
-      state: {
-        email: getValues("email"),
-      },
-    });
+    login(formData);
   }
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(
+        openSnackbar({
+          message: data?.message,
+        })
+      );
+      console.log("Mock đăng nhập:", data.refreshToken);
+      const payload = {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      };
+      dispatch(authSlice.actions.login(payload));
+      navigate("/");
+    }
+    if (isError) {
+      dispatch(
+        openSnackbar({
+          message: error?.data?.message,
+          type: "error",
+        })
+      );
+    }
+  }, [isSuccess, data, dispatch, isError, error]);
 
   return (
     <div>

@@ -5,11 +5,12 @@ import LoginPage from "@pages/auth/LoginPage";
 import OTPVerifyPage from "@pages/auth/OTPVerifyPage";
 import RegisterPage from "@pages/auth/RegisterPage";
 import RootLayout from "@pages/RootLayout";
-import { store } from "@redux/store";
+import { persistor, store } from "@redux/store";
 import { lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
 import theme from "./configs/muiConfig";
 import "./index.css";
 const HomePage = lazy(() => import("@pages/HomePage"));
@@ -45,11 +46,13 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <ModalProvider>
-        <RouterProvider router={router} />
-      </ModalProvider>
-    </ThemeProvider>
-    ,
+    <PersistGate loading={null} persistor={persistor}>
+      <ThemeProvider theme={theme}>
+        <ModalProvider>
+          <RouterProvider router={router} />
+        </ModalProvider>
+      </ThemeProvider>
+      ,{" "}
+    </PersistGate>
   </Provider>
 );

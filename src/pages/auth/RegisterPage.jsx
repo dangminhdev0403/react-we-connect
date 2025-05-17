@@ -1,16 +1,21 @@
 import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
+import { useRegisterMutation } from "@services/rootApi";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 const RegisterPage = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ Gọi hook ở trên cùng
+  const dispath = useDispatch();
+  const [register, { data, isLoading, error, isError, isSuccess }] =
+    useRegisterMutation();
+  console.log("data", { data, isLoading, error });
 
   const formSchema = yup.object().shape({
     fullName: yup.string().required(),
@@ -34,9 +39,15 @@ const RegisterPage = () => {
 
   const onSubmit = (formData) => {
     console.log("Mock đăng ký:", formData);
-    dispatch(openSnackbar({ message: "Registered successfully!" }));
-    navigate("/login");
+    register(formData);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispath(openSnackbar({ message: data?.message }));
+      navigate("/login");
+    }
+  }, [isSuccess, data, dispath, navigate]);
 
   return (
     <div>
@@ -67,6 +78,11 @@ const RegisterPage = () => {
         <Button variant="contained" type="submit">
           Sign up
         </Button>
+        {isError && (
+          <Alert severity="error" className="mt-4">
+            {error?.data?.message || "Something went wrong"}
+          </Alert>
+        )}
       </form>
       <p className="mt-4">
         Already have an account? <Link to="/login">Sign in instead</Link>
