@@ -13,7 +13,7 @@ import * as yup from "yup";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ✅ Gọi hook ở trên cùng
+  const navigate = useNavigate();
   const [login, { data, error, isError, isSuccess }] = useLoginMutation();
 
   const formSchema = yup.object().shape({
@@ -45,10 +45,10 @@ const LoginPage = () => {
           message: data?.message,
         })
       );
-      console.log("Mock đăng nhập:", data.refreshToken);
+
       const payload = {
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
+        accessToken: data.data.access_token,
+        user: { ...data.data.user },
       };
       dispatch(authSlice.actions.login(payload));
       navigate("/");
@@ -61,7 +61,7 @@ const LoginPage = () => {
         })
       );
     }
-  }, [isSuccess, data, dispatch, isError, error]);
+  }, [isSuccess, data, dispatch, isError, error, navigate]);
 
   return (
     <div>

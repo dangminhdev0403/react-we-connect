@@ -1,9 +1,9 @@
-import ModalProvider from "@context/ModalProvider";
-import { ThemeProvider } from "@mui/material";
+import {  ThemeProvider } from "@mui/material";
 import AuthLayout from "@pages/auth/AuthLayout";
 import LoginPage from "@pages/auth/LoginPage";
 import OTPVerifyPage from "@pages/auth/OTPVerifyPage";
 import RegisterPage from "@pages/auth/RegisterPage";
+import ProtectedLayout from "@pages/ProtectedLayout";
 import RootLayout from "@pages/RootLayout";
 import { persistor, store } from "@redux/store";
 import { lazy } from "react";
@@ -13,6 +13,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import theme from "./configs/muiConfig";
 import "./index.css";
+import Dialog from "@components/Dialog";
 const HomePage = lazy(() => import("@pages/HomePage"));
 
 const router = createBrowserRouter([
@@ -20,8 +21,13 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        element: <ProtectedLayout />,
+        children: [
+          {
+            path: "/",
+            element: <HomePage />,
+          },
+        ],
       },
       {
         element: <AuthLayout />,
@@ -48,9 +54,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ThemeProvider theme={theme}>
-        <ModalProvider>
-          <RouterProvider router={router} />
-        </ModalProvider>
+        <RouterProvider router={router} />
+        <Dialog />
       </ThemeProvider>
       ,{" "}
     </PersistGate>

@@ -5,11 +5,10 @@ import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const OTPVerifyPage = () => {
   const { control, handleSubmit } = useForm();
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

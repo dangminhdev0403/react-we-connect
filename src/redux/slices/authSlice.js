@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  user: {
+    name: "",
+    email: "",
+  },
   accessToken: null,
-  refreshToken: null,
 };
 
 export const authSlice = createSlice({
@@ -11,7 +14,13 @@ export const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
+      state.user = action.payload.user;
+    },
+    logOut: () => {
+      initialState;
+    },
+    updateProfile: (state, action) => {
+      state.user = action.payload;
     },
   },
 });

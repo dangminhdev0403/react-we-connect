@@ -39,7 +39,12 @@ const RegisterPage = () => {
 
   const onSubmit = (formData) => {
     console.log("Mock đăng ký:", formData);
-    register(formData);
+    const dataRegister = {
+      name: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+    };
+    register(dataRegister);
   };
 
   useEffect(() => {

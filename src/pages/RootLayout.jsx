@@ -8,7 +8,7 @@ const RootLayout = () => {
   const { open, type, message } = useSelector((state) => state.snackbar);
   const dispath = useDispatch();
   return (
-    <div>
+    <div className="text-gray-700">
       <Suspense fallback={<p>Loading</p>}>
         <Outlet />
       </Suspense>

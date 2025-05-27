@@ -1,3 +1,4 @@
+import { logOutMiddleware } from "@redux/middleware";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { rootApi } from "@services/rootApi";
 import {
@@ -12,6 +13,8 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./slices/authSlice";
+import dialogReducer from "./slices/dialogSlice";
+import settingReducer from "./slices/settingSlice";
 import snackbarReducer from "./slices/snackbarSlice";
 
 const persistConfig = {
@@ -26,6 +29,8 @@ const persistedReducer = persistReducer(
   combineReducers({
     auth: authReducer,
     snackbar: snackbarReducer,
+    setting: settingReducer,
+    dialog: dialogReducer,
     [rootApi.reducerPath]: rootApi.reducer,
   })
 );
@@ -37,7 +42,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(rootApi.middleware),
+    }).concat(rootApi.middleware, logOutMiddleware),
 });
 
 export const persistor = persistStore(store);
