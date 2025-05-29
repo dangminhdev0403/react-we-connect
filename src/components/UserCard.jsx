@@ -7,7 +7,7 @@ import {
 import { Avatar, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const UserCard = ({ isFriend = true, fullName = "Minh" }) => {
+const UserCard = ({ isFriend = false, fullName = "Minh" }) => {
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-700 overflow-hidden">
       {/* Background gradient overlay - Blue tone only */}
@@ -38,7 +38,7 @@ const UserCard = ({ isFriend = true, fullName = "Minh" }) => {
 
         {/* User info */}
         <div className="space-y-2">
-          <Link className="block">
+          <Link className="block" to={"/Test"}>
             <h3 className="font-bold text-xl text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors duration-200 hover:scale-105 transform">
               {fullName}
             </h3>
