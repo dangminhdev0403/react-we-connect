@@ -92,7 +92,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
   const [searchSuggestionsOpen, setSearchSuggestionsOpen] = useState(false);
   const [searchAnchor, setSearchAnchor] = useState(null);
   const dispatch = useDispatch();
-  const  userInfo  = useUserInfo();
+  const userInfo = useUserInfo();
 
   // Mock data
   const notifications = [
@@ -207,6 +207,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
+                  className="!border rounded-2xl border-gray-400"
                 />
               </Search>
             )}
