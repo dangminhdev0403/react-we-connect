@@ -116,7 +116,7 @@ const PostCreation = () => {
   return (
     <Paper
       elevation={2}
-      className="flex items-center gap-4 p-4 rounded-md hover:shadow-md transition"
+      className="flex items-center gap-4 p-4 rounded-md hover:shadow-md transition "
     >
       <Avatar sx={{ width: 40, height: 40 }}>
         {userInfo.name?.[0]?.toUpperCase() || "U"}

@@ -1,4 +1,5 @@
-import {  ThemeProvider } from "@mui/material";
+import Dialog from "@components/Dialog";
+import { ThemeProvider } from "@mui/material";
 import AuthLayout from "@pages/auth/AuthLayout";
 import LoginPage from "@pages/auth/LoginPage";
 import OTPVerifyPage from "@pages/auth/OTPVerifyPage";
@@ -13,7 +14,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import theme from "./configs/muiConfig";
 import "./index.css";
-import Dialog from "@components/Dialog";
 const HomePage = lazy(() => import("@pages/HomePage"));
 
 const router = createBrowserRouter([
@@ -57,7 +57,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
         <Dialog />
       </ThemeProvider>
-      ,{" "}
     </PersistGate>
   </Provider>
 );
