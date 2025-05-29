@@ -43,13 +43,28 @@ export const ImageUploader = ({ image, setImage }) => {
     accept: { "image/*": [] },
     maxFiles: 1,
   });
-
   return (
     <Box>
       {!image ? (
         <Box
           {...getRootProps()}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition"
+          sx={{
+            border: "2px dashed #e2e8f0",
+            borderRadius: "12px",
+            padding: "32px 24px",
+            cursor: "pointer",
+            backgroundColor: "#fafafa",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              borderColor: "#3b82f6",
+              backgroundColor: "#f8fafc",
+              transform: "translateY(-2px)",
+              boxShadow: "0 4px 12px rgba(59, 130, 246, 0.15)",
+            },
+            "&:active": {
+              transform: "translateY(0px)",
+            },
+          }}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -57,34 +72,101 @@ export const ImageUploader = ({ image, setImage }) => {
         >
           <input {...getInputProps()} />
           <Box>
-            <CloudUploadIcon color="action" fontSize="large" />
-            <Typography variant="body2" color="textSecondary">
+            <CloudUploadIcon
+              sx={{
+                fontSize: 48,
+                color: isDragActive ? "#3b82f6" : "#9ca3af",
+                marginBottom: 2,
+                transition: "color 0.3s ease",
+              }}
+            />
+            <Typography
+              variant="body1"
+              sx={{
+                color: isDragActive ? "#3b82f6" : "#6b7280",
+                fontWeight: 500,
+                fontSize: "15px",
+                transition: "color 0.3s ease",
+              }}
+            >
               {isDragActive
-                ? "Drop the image here..."
-                : "Drag & drop an image here, or click to select"}
+                ? "Thả ảnh vào đây..."
+                : "Kéo thả ảnh vào đây hoặc nhấp để chọn"}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "#9ca3af",
+                fontSize: "13px",
+                marginTop: 1,
+                display: "block",
+              }}
+            >
+              Hỗ trợ: JPG, PNG, GIF (tối đa 10MB)
             </Typography>
           </Box>
         </Box>
       ) : (
-        <Box className="relative border rounded-md p-2 mt-2 bg-gray-100">
+        <Box
+          sx={{
+            position: "relative",
+            border: "1px solid #e5e7eb",
+            borderRadius: "12px",
+            padding: "12px",
+            marginTop: "8px",
+            backgroundColor: "#f9fafb",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <img
-            src={previewUrl}
+            src={previewUrl || "/placeholder.svg"}
             alt="preview"
-            className="w-full max-h-60 object-contain rounded"
+            style={{
+              width: "100%",
+              maxHeight: "240px",
+              objectFit: "contain",
+              borderRadius: "8px",
+              backgroundColor: "white",
+            }}
           />
           <IconButton
             size="small"
-            className="absolute top-1 right-1"
             onClick={removeImage}
-            sx={{ backgroundColor: "white" }}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              backdropFilter: "blur(4px)",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+              "&:hover": {
+                backgroundColor: "rgba(239, 68, 68, 0.1)",
+                color: "#ef4444",
+                transform: "scale(1.1)",
+              },
+              transition: "all 0.2s ease",
+            }}
           >
             <CloseIcon fontSize="small" />
           </IconButton>
           <Typography
             variant="caption"
-            display="block"
-            mt={1}
-            textAlign="center"
+            sx={{
+              display: "block",
+              marginTop: 2,
+              textAlign: "center",
+              color: "#6b7280",
+              fontSize: "12px",
+              fontWeight: 500,
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              padding: "4px 8px",
+              borderRadius: "6px",
+              maxWidth: "200px",
+              margin: "8px auto 0",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
           >
             {image.name}
           </Typography>
