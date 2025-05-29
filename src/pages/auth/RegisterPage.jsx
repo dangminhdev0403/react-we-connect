@@ -80,9 +80,20 @@ const RegisterPage = () => {
           Component={TextInput}
           error={errors["password"]}
         />
-        <Button variant="contained" type="submit">
-          Sign up
+
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Sign Up"
+          )}
         </Button>
+
         {isError && (
           <Alert severity="error" className="mt-4">
             {error?.data?.message || "Something went wrong"}

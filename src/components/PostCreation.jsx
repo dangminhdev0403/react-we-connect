@@ -1,6 +1,6 @@
 import { useUserInfo } from "@hooks/useUserInfo";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   Avatar,
   Box,
@@ -17,20 +17,23 @@ import { useDispatch } from "react-redux";
 // ─────────────────────────────────────────────
 // ImageUploader Component with Preview Support
 // ─────────────────────────────────────────────
-export const ImageUploader = () => {
-  const [file, setFile] = useState(null);
+export const ImageUploader = ({ image, setImage }) => {
+  // const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const selectedFile = acceptedFiles[0];
-    setFile(selectedFile);
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const selectedFile = acceptedFiles[0];
+      setImage(selectedFile);
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreviewUrl(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    },
+    [setImage]
+  );
 
   const removeImage = () => {
-    setFile(null);
+    setImage(null);
     setPreviewUrl(null);
   };
 
@@ -43,7 +46,7 @@ export const ImageUploader = () => {
 
   return (
     <Box>
-      {!file ? (
+      {!image ? (
         <Box
           {...getRootProps()}
           className="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition"
@@ -83,7 +86,7 @@ export const ImageUploader = () => {
             mt={1}
             textAlign="center"
           >
-            {file.name}
+            {image.name}
           </Typography>
         </Box>
       )}

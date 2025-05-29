@@ -56,9 +56,20 @@ export const rootApi = createApi({
           return API_ROUTES.GET_PROFILE;
         },
       }),
+      createPost: builder.mutation({
+        query: (formData) => ({
+          url: API_ROUTES.CREATE_POST,
+          method: "POST",
+          body: formData,
+        }),
+      }),
     };
   },
 });
 
-export const { useRegisterMutation, useLoginMutation, useGetAuthUserQuery } =
-  rootApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useGetAuthUserQuery,
+  useCreatePostMutation,
+} = rootApi;

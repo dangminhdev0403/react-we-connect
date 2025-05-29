@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -11,10 +12,35 @@ import {
   Typography,
 } from "@mui/material";
 import { dialogSlice } from "@redux/slices/dialogSlice";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
+import { useCreatePostMutation } from "@services/rootApi";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Đổi tên từ PostCreation → PostDialogContent
 const PostDialogContent = ({ userInfo }) => {
+  const [createNewPost, { data, isSuccess, isLoading }] =
+    useCreatePostMutation();
+  const dispatch = useDispatch();
+
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState(null);
+
+  const handleCreatePost = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("content", content);
+      formData.append("image", image);
+      await createNewPost(formData).unwrap();
+      dispatch(dialogSlice.actions.closeDialog());
+      dispatch(openSnackbar({ message: "Create post successfully!" }));
+    } catch (error) {
+      dispatch(
+        dispatch(openSnackbar({ type: "error", message: error.data.message }))
+      );
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Box display="flex" alignItems="center" gap={2}>
@@ -25,6 +51,8 @@ const PostDialogContent = ({ userInfo }) => {
       </Box>
 
       <TextField
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
         multiline
         minRows={3}
         fullWidth
@@ -35,10 +63,20 @@ const PostDialogContent = ({ userInfo }) => {
         }}
       />
 
-      <ImageUploader />
+      <ImageUploader image={image} setImage={setImage} />
 
-      <Button variant="contained" color="primary" fullWidth>
-        Đăng bài
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        onClick={handleCreatePost}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          "Đăng bài"
+        )}
       </Button>
     </Box>
   );

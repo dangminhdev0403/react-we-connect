@@ -14,7 +14,8 @@ import * as yup from "yup";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [login, { data, error, isError, isSuccess }] = useLoginMutation();
+  const [login, { data, error, isError, isSuccess, isLoading }] =
+    useLoginMutation();
 
   const formSchema = yup.object().shape({
     email: yup
@@ -82,8 +83,18 @@ const LoginPage = () => {
           Component={TextInput}
           error={errors["password"]}
         />
-        <Button variant="contained" type="submit">
-          Sign in
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={isLoading}
+          type="submit"
+        >
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Sign In"
+          )}
         </Button>
       </form>
       <p className="mt-4">
