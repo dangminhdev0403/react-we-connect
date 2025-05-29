@@ -1,7 +1,7 @@
 import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Alert, Button } from "@mui/material";
+import { Alert, Button, CircularProgress } from "@mui/material";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { useRegisterMutation } from "@services/rootApi";
 import { useEffect } from "react";

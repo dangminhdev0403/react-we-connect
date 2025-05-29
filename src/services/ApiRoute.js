@@ -2,6 +2,7 @@ export const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 export const API_ROUTES = {
   REGISTER: "/auth/register",
   LOGIN: "/auth/login",
+  REFRESH: "/auth/refresh",
   LOGOUT: "/auth/logout",
   GET_PROFILE: "/users/profile",
   UPDATE_USER: "/users/update",

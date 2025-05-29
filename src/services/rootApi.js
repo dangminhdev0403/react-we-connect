@@ -16,11 +16,28 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  // If we get an unauthorized response, we can handle re-authentication here
-
-  if (result.error && result?.error?.status === 401) {
-    api.dispatch(authSlice.actions.logOut());
-    window.location.href = "/login"; // Redirect to login page
+  if (result.error && result?.error?.data?.statusCode === 401) {
+    const refreshResult = await baseQuery(
+      {
+        url: API_ROUTES.REFRESH,
+        credentials: "include",
+        method: "POST",
+      },
+      api,
+      extraOptions
+    );
+    const newAccessToken = refreshResult?.data?.data?.access_token;
+    if (newAccessToken) {
+      api.dispatch(
+        authSlice.actions.login({
+          accessToken: newAccessToken,
+        })
+      );
+      result = await baseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch(authSlice.actions.logOut());
+      window.location.href = "/login";
+    }
   }
 
   return result;
@@ -34,6 +51,8 @@ export const rootApi = createApi({
       register: builder.mutation({
         query: ({ name, email, password }) => ({
           url: API_ROUTES.REGISTER,
+          credentials: "include",
+
           method: "POST",
           body: { name, email, password },
         }),
@@ -41,10 +60,19 @@ export const rootApi = createApi({
       login: builder.mutation({
         query: ({ email, password }) => ({
           url: API_ROUTES.LOGIN,
+          credentials: "include",
+
           method: "POST",
           body: { email, password },
         }),
       }),
+      refresh: builder.mutation({
+        query: () => ({
+          url: API_ROUTES.REFRESH,
+          method: "POST",
+        }),
+      }),
+
       logOut: builder.mutation({
         query: () => ({
           url: API_ROUTES.LOGOUT,
@@ -72,4 +100,5 @@ export const {
   useLoginMutation,
   useGetAuthUserQuery,
   useCreatePostMutation,
+  useRefreshMutation,
 } = rootApi;

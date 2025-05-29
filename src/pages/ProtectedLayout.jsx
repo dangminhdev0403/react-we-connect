@@ -3,7 +3,7 @@ import { authSlice } from "@redux/slices/authSlice";
 import { useGetAuthUserQuery } from "@services/rootApi";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 const ProtectedLayout = () => {
   const { data, isLoading, isFetching, isSuccess } = useGetAuthUserQuery();
@@ -19,9 +19,9 @@ const ProtectedLayout = () => {
     return <p>Đang tải...</p>;
   }
 
-  if (isSuccess && !data?.data.name) {
-    return <Navigate to="/login" replace />;
-  }
+  // if (isSuccess && !data?.data.name) {
+  //   return <Navigate to="/login" replace />;
+  // }
   return (
     <div>
       <Header />

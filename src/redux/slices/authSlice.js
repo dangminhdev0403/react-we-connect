@@ -14,11 +14,12 @@ export const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.accessToken = action.payload.accessToken;
-      state.user = action.payload.user;
-    },
-    logOut: () => {
-      initialState;
-    },
+
+      if (action.payload.user) {
+        state.user = action.payload.user;
+      }    },
+    logOut: () => initialState, // ✅ trả lại initial state
+
     updateProfile: (state, action) => {
       state.user = action.payload;
     },
