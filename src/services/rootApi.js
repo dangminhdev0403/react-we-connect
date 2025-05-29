@@ -90,6 +90,13 @@ export const rootApi = createApi({
           method: "POST",
           body: formData,
         }),
+        invalidatesTags: ["Post"],
+      }),
+      getAllPosts: builder.query({
+        query: () => {
+          return API_ROUTES.GET_All_POSTS;
+        },
+        providesTags: ["Post"],
       }),
     };
   },
@@ -101,4 +108,6 @@ export const {
   useGetAuthUserQuery,
   useCreatePostMutation,
   useRefreshMutation,
+  useLogOutMutation,
+  useGetAllPostsQuery,
 } = rootApi;
