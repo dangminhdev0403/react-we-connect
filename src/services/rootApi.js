@@ -46,6 +46,7 @@ export const rootApi = createApi({
   // process is not defined in the browser, but vite replaces it with import.meta.env
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["POSTS", "USERS"],
   endpoints: (builder) => {
     return {
       register: builder.mutation({
@@ -90,7 +91,7 @@ export const rootApi = createApi({
           method: "POST",
           body: formData,
         }),
-        invalidatesTags: ["Post"],
+        invalidatesTags: [{ type: "POSTS" }],
       }),
       getAllPosts: builder.query({
         query: ({ offset, limit } = {}) => {
@@ -102,7 +103,23 @@ export const rootApi = createApi({
             },
           };
         },
-        providesTags: ["Post"],
+        providesTags: [{ type: "POSTS" }],
+      }),
+      searchUser: builder.query({
+        query: ({ offset, limit, keyword }) => {
+          const encoedKeyword = encodeURIComponent(keyword.trim());
+          return {
+            url: `${API_ROUTES.SEARCH_USER}?keyword=${encoedKeyword}`,
+            params: { offset, limit },
+          };
+        },
+        providesTags: (result) =>
+          result
+            ? [
+                ...result.data.map((post) => ({ type: "USERS", id: post._id })),
+                { type: "USERS", id: "LIST" },
+              ]
+            : [{ type: "USERS", id: "LIST" }],
       }),
     };
   },
@@ -116,4 +133,5 @@ export const {
   useRefreshMutation,
   useLogOutMutation,
   useGetAllPostsQuery,
+  useSearchUserQuery,
 } = rootApi;

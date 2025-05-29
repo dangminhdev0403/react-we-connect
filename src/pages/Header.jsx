@@ -37,6 +37,7 @@ import { styled } from "@mui/material/styles";
 import { settingSlice } from "@redux/slices/settingSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
 const Search = styled("div")(({ theme }) => ({
@@ -92,6 +93,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
   const [searchSuggestionsOpen, setSearchSuggestionsOpen] = useState(false);
   const [searchAnchor, setSearchAnchor] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userInfo = useUserInfo();
 
   // Mock data
@@ -156,6 +158,16 @@ const Header = ({ darkMode, toggleDarkMode }) => {
     }
   };
 
+  const handleSubmitSearch = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/search/users`, {
+        state: {
+          searchQuery,
+        },
+      });
+    }
+  };
+
   const handleSearchFocus = (event) => {
     if (searchQuery.length > 0) {
       setSearchSuggestionsOpen(true);
@@ -207,6 +219,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
+                  onKeyDown={handleSubmitSearch}
                   className="!border rounded-2xl border-gray-400"
                 />
               </Search>

@@ -3,3 +3,13 @@
 body {
   font-family: "Public Sans Variable", sans-serif;
 }
+
+@layer components {
+  .card {
+    @apply bg-white rounded-lg shadow-md p-4;
+  }
+
+  .container {
+    @apply flex gap-4 p-6  max-w-6xl justify-center h-screen;
+  }
+}

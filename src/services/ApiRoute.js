@@ -8,6 +8,7 @@ export const API_ROUTES = {
   UPDATE_USER: "/users/update",
   DELETE_USER: "/users/delete",
   GET_ALL_USERS: "/users",
+  SEARCH_USER: "/users/search",
   CREATE_POST: "/posts",
   GET_All_POSTS: "/posts",
   GET_POST_BY_ID: (id) => `/post/${id}`,

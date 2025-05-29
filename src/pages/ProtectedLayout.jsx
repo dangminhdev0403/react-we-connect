@@ -25,7 +25,9 @@ const ProtectedLayout = () => {
   return (
     <div>
       <Header />
-      <Outlet />
+      <div className="bg-[#f8f7fa]">
+        <Outlet />
+      </div>
     </div>
   );
 };

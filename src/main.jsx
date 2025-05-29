@@ -6,6 +6,7 @@ import OTPVerifyPage from "@pages/auth/OTPVerifyPage";
 import RegisterPage from "@pages/auth/RegisterPage";
 import ProtectedLayout from "@pages/ProtectedLayout";
 import RootLayout from "@pages/RootLayout";
+import SearchUserPage from "@pages/SearchUserPage";
 import { persistor, store } from "@redux/store";
 import { lazy } from "react";
 import ReactDOM from "react-dom/client";
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
           {
             path: "/",
             element: <HomePage />,
+          },
+          {
+            path: "/search/users",
+            element: <SearchUserPage />,
           },
         ],
       },
