@@ -93,8 +93,14 @@ export const rootApi = createApi({
         invalidatesTags: ["Post"],
       }),
       getAllPosts: builder.query({
-        query: () => {
-          return API_ROUTES.GET_All_POSTS;
+        query: ({ offset, limit } = {}) => {
+          return {
+            url: API_ROUTES.GET_All_POSTS,
+            params: {
+              offset,
+              limit,
+            },
+          };
         },
         providesTags: ["Post"],
       }),
