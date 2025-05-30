@@ -1,21 +1,94 @@
 import {
+  Cancel,
   LocationOn,
   MessageOutlined,
+  Pending,
   People,
-  PersonAdd,
 } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import { Avatar, Button } from "@mui/material";
+import { useSendFriendRequestMutation } from "@services/rootApi";
+import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const UserCard = ({ isFriend = false, fullName = "Minh" }) => {
+const UserCard = ({ fullName = "Minh", requestStatus = "pending", userId }) => {
+  const [sendFriendRequest, { isLoading }] = useSendFriendRequestMutation();
+  const renderActions = () => {
+    switch (requestStatus) {
+      case "accepted":
+        return (
+          <Link to="/chat">
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<MessageOutlined />}
+              className="w-full"
+            >
+              Chat
+            </Button>
+          </Link>
+        );
+
+      case "pending":
+        return (
+          <Button
+            variant="outlined"
+            startIcon={<Pending />}
+            disabled
+            className="w-full"
+          >
+            Pending
+          </Button>
+        );
+
+      case "incoming":
+        return (
+          <div className="flex gap-2 w-full">
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<Check />}
+              className="flex-1"
+            >
+              Approve
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<Cancel />}
+              className="flex-1"
+            >
+              Decline
+            </Button>
+          </div>
+        );
+
+      case "none":
+      default:
+        return (
+          <LoadingButton
+            onClick={() => sendFriendRequest(userId)}
+            variant="outlined"
+            color="primary"
+            startIcon={<People />}
+            className="w-full"
+            disabled={isLoading}
+            loading={isLoading}
+          >
+            Add Friend
+          </LoadingButton>
+        );
+    }
+  };
+
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-700 overflow-hidden">
-      {/* Background gradient overlay - Blue tone only */}
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-        {/* Avatar with glow */}
+        {/* Avatar */}
         <div className="relative">
           <Avatar
             sx={{
@@ -29,14 +102,12 @@ const UserCard = ({ isFriend = false, fullName = "Minh" }) => {
           >
             {fullName?.[0]?.toUpperCase()}
           </Avatar>
-
-          {/* Online status */}
           <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-white dark:border-gray-800 rounded-full shadow-lg">
             <div className="w-full h-full bg-green-400 rounded-full animate-ping opacity-75"></div>
           </div>
         </div>
 
-        {/* User info */}
+        {/* Info */}
         <div className="space-y-2">
           <Link className="block" to={"/Test"}>
             <h3 className="font-bold text-xl text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors duration-200 hover:scale-105 transform">
@@ -48,7 +119,7 @@ const UserCard = ({ isFriend = false, fullName = "Minh" }) => {
           </p>
         </div>
 
-        {/* Badges - all blue tone */}
+        {/* Badges */}
         <div className="flex flex-wrap gap-2 justify-center">
           <div className="flex items-center gap-1 px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
             <LocationOn sx={{ fontSize: 12 }} />
@@ -60,61 +131,8 @@ const UserCard = ({ isFriend = false, fullName = "Minh" }) => {
           </div>
         </div>
 
-        {/* Action Button - consistent blue style */}
-        <div className="w-full pt-2">
-          {isFriend ? (
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              sx={{
-                background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                borderRadius: "12px",
-                textTransform: "none",
-                fontWeight: 600,
-                fontSize: "0.95rem",
-                padding: "12px 24px",
-                boxShadow: "0 8px 25px rgba(59, 130, 246, 0.3)",
-                "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
-                  boxShadow: "0 12px 35px rgba(59, 130, 246, 0.4)",
-                  transform: "translateY(-2px)",
-                },
-                transition: "all 0.3s ease",
-              }}
-            >
-              <MessageOutlined sx={{ marginRight: 1, fontSize: 20 }} />
-              Message
-            </Button>
-          ) : (
-            <Button
-              variant="outlined"
-              size="large"
-              fullWidth
-              sx={{
-                borderColor: "#3b82f6",
-                color: "#3b82f6",
-                borderWidth: "2px",
-                borderRadius: "12px",
-                textTransform: "none",
-                fontWeight: 600,
-                fontSize: "0.95rem",
-                padding: "12px 24px",
-                "&:hover": {
-                  borderColor: "#2563eb",
-                  backgroundColor: "rgba(59, 130, 246, 0.05)",
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)",
-                },
-                transition: "all 0.3s ease",
-              }}
-            >
-              <PersonAdd sx={{ marginRight: 1, fontSize: 20 }} />
-              Add Friend
-            </Button>
-          )}
-        </div>
+        {/* Actions */}
+        <div className="w-full pt-2">{renderActions()}</div>
       </div>
 
       {/* Decorative dots */}

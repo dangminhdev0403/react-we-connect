@@ -1,4 +1,4 @@
-import FriendRequest from "@components/FriendRequest";
+import FriendRequest from "@components/FriendRequest/FriendRequest";
 import PostCreation from "@components/PostCreation";
 import PostList from "@components/PostList";
 import Sidebar from "@components/Sidebar";

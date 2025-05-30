@@ -37,7 +37,7 @@ import { styled } from "@mui/material/styles";
 import { settingSlice } from "@redux/slices/settingSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Styled components
 const Search = styled("div")(({ theme }) => ({
@@ -195,19 +195,24 @@ const Header = ({ darkMode, toggleDarkMode }) => {
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
           {/* Left side - Logo and Search */}
+
           <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mr: 3 }}>
-              <Avatar sx={{ bgcolor: "primary.main", width: 32, height: 32 }}>
-                <Typography variant="body2" fontWeight="bold">
-                  WC
-                </Typography>
-              </Avatar>
-              {!isMobile && (
-                <Typography variant="h6" fontWeight="bold" color="primary">
-                  WeConnect
-                </Typography>
-              )}
-            </Box>
+            <Link to="/">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, mr: 3 }}
+              >
+                <Avatar sx={{ bgcolor: "primary.main", width: 32, height: 32 }}>
+                  <Typography variant="body2" fontWeight="bold">
+                    WC
+                  </Typography>
+                </Avatar>
+                {!isMobile && (
+                  <Typography variant="h6" fontWeight="bold" color="primary">
+                    WeConnect
+                  </Typography>
+                )}
+              </Box>
+            </Link>
 
             {!isMobile && (
               <Search>

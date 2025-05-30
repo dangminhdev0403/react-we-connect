@@ -121,6 +121,29 @@ export const rootApi = createApi({
               ]
             : [{ type: "USERS", id: "LIST" }],
       }),
+      sendFriendRequest: builder.mutation({
+        query: (receiverId) => ({
+          url: API_ROUTES.SEND_FRIEND_REQUEST,
+          method: "POST",
+          body: { receiverId },
+        }),
+        invalidatesTags: (result, error, args) => [{ type: "USERS", id: args }],
+      }),
+      getFriendRequests: builder.query({
+        query: () => {
+          return API_ROUTES.GET_FRIEND_REQUESTS;
+        },
+        providesTags: (result) =>
+          result
+            ? [
+                ...result.data.users.map(({ _id }) => ({
+                  type: "PENDING_FRIEND_REQUEST",
+                  id: _id,
+                })),
+                { type: "PENDING_FRIEND_REQUEST", id: "LIST" },
+              ]
+            : [{ type: "PENDING_FRIEND_REQUEST", id: "LIST" }],
+      }),
     };
   },
 });
@@ -134,4 +157,6 @@ export const {
   useLogOutMutation,
   useGetAllPostsQuery,
   useSearchUserQuery,
+  useSendFriendRequestMutation,
+  useGetFriendRequestsQuery,
 } = rootApi;

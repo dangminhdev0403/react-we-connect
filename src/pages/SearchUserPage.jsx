@@ -43,15 +43,24 @@ const SearchUserPage = () => {
 
   const listUsers = data?.data || [];
 
+  let gridColsClass =
+    "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+  if (listUsers.length === 1) {
+    gridColsClass = "grid-cols-1";
+  } else if (listUsers.length === 2) {
+    gridColsClass = "grid-cols-2";
+  }
+
   return (
     <div className="container flex-col mx-auto pt-2.5 items-center">
       {listUsers.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        <div className={`grid gap-4 justify-center ${gridColsClass}`}>
           {listUsers.map((user) => (
             <UserCard
               key={user._id}
-              fullName={user.fullName}
-              isFriend={user.isFriend}
+              userId={user._id}
+              fullName={user.name}
+              requestStatus={user.requestStatus}
             />
           ))}
         </div>

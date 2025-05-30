@@ -1,12 +1,12 @@
-import { UserPlus, X } from "lucide-react";
+import FriendRequestItem from "@components/FriendRequest/FriendRequestItem";
+import { useGetFriendRequestsQuery } from "@services/rootApi";
 
 export default function FriendRequest() {
-  const friendRequests = [
-    { id: 1, name: "Nguyễn Văn A", mutualFriends: 5 },
-    { id: 2, name: "Trần Thị B", mutualFriends: 12 },
-    { id: 3, name: "Lê Văn C", mutualFriends: 3 },
-    { id: 4, name: "Phạm Thị D", mutualFriends: 8 },
-  ];
+  const { data: result } = useGetFriendRequestsQuery();
+
+  console.log("data", result?.data?.users);
+
+  const friendRequests = result?.data?.users || [];
 
   const suggestedFriends = [
     { id: 5, name: "Hoàng Văn E", mutualFriends: 2 },
@@ -25,25 +25,10 @@ export default function FriendRequest() {
         </div>
         <div className="p-3">
           {friendRequests.map((request) => (
-            <div key={request.id} className="flex items-center gap-3 py-2">
-              <div className="w-12 h-12 bg-gray-300 rounded-full flex-shrink-0"></div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 text-sm truncate">
-                  {request.name}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {request.mutualFriends} bạn chung
-                </p>
-              </div>
-              <div className="flex flex-col gap-1">
-                <button className="p-1.5 text-green-600 hover:bg-green-50 rounded-full">
-                  <UserPlus size={14} />
-                </button>
-                <button className="p-1.5 text-red-600 hover:bg-red-50 rounded-full">
-                  <X size={14} />
-                </button>
-              </div>
-            </div>
+            <FriendRequestItem
+              key={request.senderInfo._id}
+              friend={request.senderInfo}
+            />
           ))}
         </div>
       </div>
@@ -57,22 +42,7 @@ export default function FriendRequest() {
         </div>
         <div className="p-3">
           {suggestedFriends.map((friend) => (
-            <div key={friend.id} className="flex items-center gap-3 py-2">
-              <div className="w-12 h-12 bg-gray-300 rounded-full flex-shrink-0"></div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 text-sm truncate">
-                  {friend.name}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {friend.mutualFriends} bạn chung
-                </p>
-              </div>
-              <div className="flex items-center">
-                <button className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full">
-                  <UserPlus size={14} />
-                </button>
-              </div>
-            </div>
+            <FriendRequestItem key={friend.id} friend={friend} />
           ))}
         </div>
       </div>
