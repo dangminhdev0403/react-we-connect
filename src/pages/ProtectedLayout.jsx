@@ -1,3 +1,4 @@
+import SocketProvider from "@context/SocketProvider";
 import Header from "@pages/Header";
 import { authSlice } from "@redux/slices/authSlice";
 import { useGetAuthUserQuery } from "@services/rootApi";
@@ -23,12 +24,14 @@ const ProtectedLayout = () => {
   //   return <Navigate to="/login" replace />;
   // }
   return (
-    <div>
-      <Header />
-      <div className="bg-[#f8f7fa]">
-        <Outlet />
+    <SocketProvider>
+      <div>
+        <Header />
+        <div className="bg-[#f8f7fa]">
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </SocketProvider>
   );
 };
 
