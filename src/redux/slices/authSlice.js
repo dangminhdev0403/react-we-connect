@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: {
+    id: "",
     name: "",
     email: "",
   },
@@ -17,7 +18,8 @@ export const authSlice = createSlice({
 
       if (action.payload.user) {
         state.user = action.payload.user;
-      }    },
+      }
+    },
     logOut: () => initialState, // ✅ trả lại initial state
 
     updateProfile: (state, action) => {

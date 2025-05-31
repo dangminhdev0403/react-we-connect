@@ -91,7 +91,63 @@ export const rootApi = createApi({
           method: "POST",
           body: formData,
         }),
-        invalidatesTags: [{ type: "POSTS" }],
+        onQueryStarted: async (
+          args,
+          { dispatch, queryFulfilled, getState }
+        ) => {
+          const tempID = crypto.randomUUID();
+          const store = getState();
+          const newPost = {
+            _id: tempID,
+            content: args.get("content"),
+            image: args.get("image"),
+            likeCount: 0,
+            commentCount: 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            __v: 0,
+            author: {
+              _id: store.auth.user.id,
+              name: store.auth.user.name,
+            },
+          };
+
+          const pathResult = dispatch(
+            rootApi.util.updateQueryData(
+              "getAllPosts",
+              { offset: 1, limit: 5 },
+              (draft) => {
+                console.log("draft", draft.data);
+
+                if (!Array.isArray(draft.data.posts)) {
+                  draft.data.posts = [];
+                }
+                draft.data.posts.unshift(newPost);
+              }
+            )
+          );
+
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              rootApi.util.updateQueryData(
+                "getAllPosts",
+                { offset: 1, limit: 5 },
+                (draft) => {
+                  const index = draft.data.posts.findIndex(
+                    (post) => post._id === tempID
+                  );
+                  if (index !== -1) {
+                    draft.data.posts[index] = data;
+                  }
+                }
+              )
+            );
+          } catch (error) {
+            pathResult.undo();
+            console.log(error);
+          }
+        },
       }),
       getAllPosts: builder.query({
         query: ({ offset, limit } = {}) => {

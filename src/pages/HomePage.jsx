@@ -5,7 +5,7 @@ import Sidebar from "@components/Sidebar";
 
 function HomePage() {
   return (
-    <div className="flex h-screen bg-[#f8f7fa] pt-2 overflow-y-auto">
+    <div className="flex bg-[#f8f7fa] pt-2">
       <div className="flex-shrink-0  h-fit sticky top-0">
         {" "}
         <Sidebar />

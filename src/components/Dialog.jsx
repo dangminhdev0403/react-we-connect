@@ -35,9 +35,9 @@ const PostDialogContent = ({ userInfo }) => {
       dispatch(dialogSlice.actions.closeDialog());
       dispatch(openSnackbar({ message: "Create post successfully!" }));
     } catch (error) {
-      dispatch(
-        dispatch(openSnackbar({ type: "error", message: error.data.message }))
-      );
+      const errorMessage =
+        error?.data?.message || error?.message || "Something went wrong";
+      dispatch(openSnackbar({ type: "error", message: errorMessage }));
     }
   };
 
