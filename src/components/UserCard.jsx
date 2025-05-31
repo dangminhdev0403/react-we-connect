@@ -1,3 +1,5 @@
+import { socket } from "@context/SocketProvider";
+import { EVENTS_SOCKET } from "@libs/constants";
 import {
   Cancel,
   LocationOn,
@@ -13,6 +15,11 @@ import { Link } from "react-router-dom";
 
 const UserCard = ({ fullName = "Minh", requestStatus = "pending", userId }) => {
   const [sendFriendRequest, { isLoading }] = useSendFriendRequestMutation();
+
+  const handleSendFriendRequest = async (receiverId) => {
+    await sendFriendRequest(receiverId).unwrap();
+    socket.emit(EVENTS_SOCKET.SEND_FRIEND_REQUEST, { receiverId });
+  };
   const renderActions = () => {
     switch (requestStatus) {
       case "accepted":
@@ -67,7 +74,7 @@ const UserCard = ({ fullName = "Minh", requestStatus = "pending", userId }) => {
       default:
         return (
           <LoadingButton
-            onClick={() => sendFriendRequest(userId)}
+            onClick={() => handleSendFriendRequest(userId)}
             variant="outlined"
             color="primary"
             startIcon={<People />}

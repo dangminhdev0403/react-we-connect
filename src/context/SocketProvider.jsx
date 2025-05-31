@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
-const socket = io(import.meta.env.VITE_BASE_URL, {
+export const socket = io(import.meta.env.VITE_BASE_URL, {
   autoConnect: false,
 });
 
@@ -15,7 +15,10 @@ export const useModelContext = () => {
 const SocketProvider = ({ children }) => {
   const token = useSelector((state) => state.auth.accessToken);
   useEffect(() => {
+    if (!token) return;
     socket.auth = { token };
+    console.log("🔐 Socket token:", token);
+
     socket.connect();
     socket.on("connect", () => {
       console.log("Socket connected");
@@ -28,7 +31,7 @@ const SocketProvider = ({ children }) => {
       socket.off("disconnect");
       socket.disconnect();
     };
-  });
+  }, [token]);
   return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
 };
 

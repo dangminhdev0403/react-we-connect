@@ -1,10 +1,11 @@
 import FriendRequestItem from "@components/FriendRequest/FriendRequestItem";
+import { socket } from "@context/SocketProvider";
+import { EVENTS_SOCKET } from "@libs/constants";
 import { useGetFriendRequestsQuery } from "@services/rootApi";
+import { useEffect } from "react";
 
 export default function FriendRequest() {
-  const { data: result } = useGetFriendRequestsQuery();
-
-  console.log("data", result?.data?.users);
+  const { data: result = [], refetch } = useGetFriendRequestsQuery();
 
   const friendRequests = result?.data?.users || [];
 
@@ -13,6 +14,20 @@ export default function FriendRequest() {
     { id: 6, name: "Vũ Thị F", mutualFriends: 7 },
     { id: 7, name: "Đặng Văn G", mutualFriends: 4 },
   ];
+
+  useEffect(() => {
+    console.log("Đang đăng ký listener cho friendRequestReceived");
+
+    socket.on(EVENTS_SOCKET.FRIEND_REQUEST_RECEIVED, (data) => {
+      if (data.from) {
+        refetch();
+      }
+    });
+
+    return () => {
+      socket.off(EVENTS_SOCKET.FRIEND_REQUEST_RECEIVED);
+    };
+  }, [refetch]);
 
   return (
     <div className="space-y-4">

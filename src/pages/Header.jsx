@@ -383,9 +383,9 @@ const Header = ({ darkMode, toggleDarkMode }) => {
         onClose={handleCloseMenus}
       >
         <Box sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2">John Doe</Typography>
+          <Typography variant="subtitle2">{userInfo.name}</Typography>
           <Typography variant="caption" color="text.secondary">
-            john.doe@example.com
+            {userInfo.email}
           </Typography>
         </Box>
         <Divider />
