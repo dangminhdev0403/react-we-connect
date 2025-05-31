@@ -1,3 +1,4 @@
+import ChatBox from "@components/Chat/ChatBox";
 import FriendRequest from "@components/FriendRequest/FriendRequest";
 import PostCreation from "@components/PostCreation";
 import PostList from "@components/PostList";
@@ -25,6 +26,9 @@ function HomePage() {
       {/* Sidebar phải - cố định */}
       <div className="w-64 hidden sm:block flex-shrink-0 top-0 h-fit sticky">
         <FriendRequest />
+      </div>
+      <div className="fixed bottom-5 right-50 z-50 w-80 h-[500px] flex justify-center ">
+        <ChatBox />
       </div>
     </div>
   );
