@@ -133,6 +133,11 @@ export const rootApi = createApi({
             )
           );
 
+          // Helper function to find post index by tempID
+          function findPostIndexByTempID(posts, tempID) {
+            return posts.findIndex((post) => post._id === tempID);
+          }
+
           try {
             const { data } = await queryFulfilled;
             // ✅ Replace temp post với post thực tế từ server
@@ -142,9 +147,7 @@ export const rootApi = createApi({
                   "getAllPosts",
                   patch.arg,
                   (draft) => {
-                    const index = draft.data.posts.findIndex(
-                      (post) => post._id === tempID
-                    );
+                    const index = findPostIndexByTempID(draft.data.posts, tempID);
                     if (index !== -1) {
                       draft.data.posts[index] = data;
                     }
