@@ -19,8 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Đổi tên từ PostCreation → PostDialogContent
 const PostDialogContent = ({ userInfo }) => {
-  const [createNewPost, { data, isSuccess, isLoading }] =
-    useCreatePostMutation();
+  const [createNewPost, { isLoading }] = useCreatePostMutation();
   const dispatch = useDispatch();
 
   const [content, setContent] = useState("");

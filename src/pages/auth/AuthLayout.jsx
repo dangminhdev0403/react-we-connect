@@ -1,7 +1,16 @@
 import { Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const AuthLayout = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    console.log("isAuthenticated", isAuthenticated);
+
+    navigate(-1);
+  }
   return (
     <div className="bg-gray-100  flex h-screen items-center justify-center">
       <div className="h-fit w-[450px] bg-white px-8 py-10">

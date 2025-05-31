@@ -34,6 +34,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { authSlice } from "@redux/slices/authSlice";
 import { settingSlice } from "@redux/slices/settingSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -186,6 +187,10 @@ const Header = ({ darkMode, toggleDarkMode }) => {
     setSearchSuggestionsOpen(false);
   };
 
+  const handleLogout = () => {
+    dispatch(authSlice.actions.logOut());
+    navigate("/login");
+  };
   return (
     <>
       <AppBar
@@ -398,7 +403,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
           Settings
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleCloseMenus}>
+        <MenuItem onClick={handleLogout}>
           <LogoutIcon sx={{ mr: 2 }} />
           Logout
         </MenuItem>

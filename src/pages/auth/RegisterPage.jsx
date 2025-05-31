@@ -1,7 +1,8 @@
 import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Alert, Button, CircularProgress } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Alert, CircularProgress } from "@mui/material";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { useRegisterMutation } from "@services/rootApi";
 import { useEffect } from "react";
@@ -81,18 +82,20 @@ const RegisterPage = () => {
           error={errors["password"]}
         />
 
-        <Button
+        <LoadingButton
           variant="contained"
           color="primary"
           fullWidth
           disabled={isLoading}
+          type="submit"
+          loading={isLoading}
         >
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
             "Sign Up"
           )}
-        </Button>
+        </LoadingButton>
 
         {isError && (
           <Alert severity="error" className="mt-4">

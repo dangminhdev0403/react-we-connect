@@ -3,12 +3,13 @@ import Header from "@pages/Header";
 import { authSlice } from "@redux/slices/authSlice";
 import { useGetAuthUserQuery } from "@services/rootApi";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedLayout = () => {
   const { data, isLoading, isFetching, isSuccess } = useGetAuthUserQuery();
   const dispath = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isSuccess) {
@@ -20,9 +21,9 @@ const ProtectedLayout = () => {
     return <p>Đang tải...</p>;
   }
 
-  // if (isSuccess && !data?.data.name) {
-  //   return <Navigate to="/login" replace />;
-  // }
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
   return (
     <SocketProvider>
       <div>
