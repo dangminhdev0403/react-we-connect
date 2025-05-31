@@ -1,16 +1,7 @@
 "use client";
 
-import {
-  Check,
-  CheckCheck,
-  MessageCircle,
-  Minus,
-  Phone,
-  Send,
-  Smile,
-  Video,
-  X,
-} from "lucide-react";
+import BoxOpen from "@components/Chat/BoxOpen";
+import { Check, CheckCheck, Phone, Send, Smile, Video, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function ChatBox() {
@@ -33,20 +24,6 @@ export default function ChatBox() {
     },
     {
       id: 3,
-      text: "Mình muốn hỏi về dự án tuần tới",
-      sender: "other",
-      timestamp: "14:33",
-      status: "delivered",
-    },
-    {
-      id: 33,
-      text: "Mình muốn hỏi về dự án tuần tới",
-      sender: "other",
-      timestamp: "14:33",
-      status: "delivered",
-    },
-    {
-      id: 31,
       text: "Mình muốn hỏi về dự án tuần tới",
       sender: "other",
       timestamp: "14:33",
@@ -96,20 +73,13 @@ export default function ChatBox() {
   };
 
   if (!isOpen) {
-    return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-50"
-      >
-        <MessageCircle className="w-6 h-6" />
-      </button>
-    );
+    return <BoxOpen setIsOpen={setIsOpen} />;
   }
 
   return (
     <div
-      className={`fixed bottom-4 right-48 w-96 bg-white rounded-lg shadow-xl z-50 transition-all duration-300 ${
-        isMinimized ? "h-14" : "h-[520px]"
+      className={`  w-80 bg-white rounded-lg shadow-xl z-50 transition-all duration-300 ${
+        isMinimized ? "h-14" : "h-[500px]"
       }`}
     >
       {/* Header */}
@@ -130,12 +100,7 @@ export default function ChatBox() {
           <button className="p-1 hover:bg-white/20 rounded">
             <Video className="w-4 h-4" />
           </button>
-          <button
-            onClick={() => setIsMinimized(!isMinimized)}
-            className="p-1 hover:bg-white/20 rounded"
-          >
-            <Minus className="w-4 h-4" />
-          </button>
+
           <button
             onClick={() => setIsOpen(false)}
             className="p-1 hover:bg-white/20 rounded"
@@ -148,7 +113,7 @@ export default function ChatBox() {
       {!isMinimized && (
         <>
           {/* Messages */}
-          <div className="h-[400px] overflow-y-auto p-3 space-y-2 flex flex-col justify-end ">
+          <div className="h-[370px] overflow-y-auto p-3 space-y-2">
             {messages.map((message) => (
               <div
                 key={message.id}

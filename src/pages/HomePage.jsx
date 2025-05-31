@@ -27,8 +27,12 @@ function HomePage() {
       <div className="w-64 hidden sm:block flex-shrink-0 top-0 h-fit sticky">
         <FriendRequest />
       </div>
-      <div className="fixed bottom-5 right-50 z-50 w-80 h-[500px] flex justify-center ">
-        <ChatBox />
+      <div className="fixed bottom-5 right-5 z-50 flex gap-4">
+        {[0, 1, 2].map((_, i) => (
+          <div key={i} className="relative">
+            <ChatBox />
+          </div>
+        ))}
       </div>
     </div>
   );
