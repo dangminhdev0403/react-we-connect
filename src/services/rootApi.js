@@ -97,10 +97,12 @@ export const rootApi = createApi({
         ) => {
           const tempID = crypto.randomUUID();
           const store = getState();
+          const file = args.get("image");
+          const imageUrl = file ? URL.createObjectURL(file) : null;
           const newPost = {
             _id: tempID,
             content: args.get("content"),
-            image: args.get("image"),
+            imageUrl,
             likeCount: 0,
             commentCount: 0,
             createdAt: new Date().toISOString(),
@@ -112,40 +114,47 @@ export const rootApi = createApi({
             },
           };
 
-          const pathResult = dispatch(
-            rootApi.util.updateQueryData(
-              "getAllPosts",
-              { offset: 1, limit: 5 },
-              (draft) => {
-                console.log("draft", draft.data);
+          // ✅ Patch tất cả pages (hoặc ít nhất page đầu tiên)
+          const patchResults = [];
 
-                if (!Array.isArray(draft.data.posts)) {
-                  draft.data.posts = [];
-                }
-                draft.data.posts.unshift(newPost);
-              }
-            )
-          );
-
-          try {
-            const { data } = await queryFulfilled;
+          // Ví dụ: patch page đầu tiên (offset 1)
+          patchResults.push(
             dispatch(
               rootApi.util.updateQueryData(
                 "getAllPosts",
                 { offset: 1, limit: 5 },
                 (draft) => {
-                  const index = draft.data.posts.findIndex(
-                    (post) => post._id === tempID
-                  );
-                  if (index !== -1) {
-                    draft.data.posts[index] = data;
+                  if (!Array.isArray(draft.data.posts)) {
+                    draft.data.posts = [];
                   }
+                  draft.data.posts.unshift(newPost);
                 }
               )
-            );
-          } catch (error) {
-            pathResult.undo();
-            console.log(error);
+            )
+          );
+
+          try {
+            const { data } = await queryFulfilled;
+            // ✅ Replace temp post với post thực tế từ server
+            patchResults.forEach((patch) => {
+              dispatch(
+                rootApi.util.updateQueryData(
+                  "getAllPosts",
+                  patch.arg,
+                  (draft) => {
+                    const index = draft.data.posts.findIndex(
+                      (post) => post._id === tempID
+                    );
+                    if (index !== -1) {
+                      draft.data.posts[index] = data;
+                    }
+                  }
+                )
+              );
+            });
+          } catch (err) {
+            patchResults.forEach((patch) => patch.undo());
+            console.error("Error in createPost:", err);
           }
         },
       }),

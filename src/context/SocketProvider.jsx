@@ -17,7 +17,6 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!token) return;
     socket.auth = { token };
-    console.log("🔐 Socket token:", token);
 
     socket.connect();
     socket.on("connect", () => {

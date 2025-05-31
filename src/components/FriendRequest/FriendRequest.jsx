@@ -16,8 +16,6 @@ export default function FriendRequest() {
   ];
 
   useEffect(() => {
-    console.log("Đang đăng ký listener cho friendRequestReceived");
-
     socket.on(EVENTS_SOCKET.FRIEND_REQUEST_RECEIVED, (data) => {
       if (data.from) {
         refetch();
