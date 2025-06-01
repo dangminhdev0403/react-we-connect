@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -6,11 +6,22 @@ const AuthLayout = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  if (isAuthenticated) {
-    console.log("isAuthenticated", isAuthenticated);
+  useEffect(() => {
+    if (isAuthenticated === true) {
+      console.log("isAuthenticated", isAuthenticated);
+      navigate(-1);
+    }
+  }, [isAuthenticated, navigate]);
 
-    navigate(-1);
-  }
+  if (isAuthenticated)
+    return (
+      <div className="bg-gray-100  flex h-screen items-center justify-center">
+        <div className="h-fit w-[450px] bg-white px-8 py-10">
+          <img src="/weconnect-logo.png" className="mx-auto mb-6" alt="Logo" />
+          <Suspense fallback={<p>Loading</p>}></Suspense>
+        </div>
+      </div>
+    );
   return (
     <div className="bg-gray-100  flex h-screen items-center justify-center">
       <div className="h-fit w-[450px] bg-white px-8 py-10">

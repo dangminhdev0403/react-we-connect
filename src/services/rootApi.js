@@ -147,7 +147,10 @@ export const rootApi = createApi({
                   "getAllPosts",
                   patch.arg,
                   (draft) => {
-                    const index = findPostIndexByTempID(draft.data.posts, tempID);
+                    const index = findPostIndexByTempID(
+                      draft.data.posts,
+                      tempID
+                    );
                     if (index !== -1) {
                       draft.data.posts[index] = data;
                     }
@@ -197,6 +200,20 @@ export const rootApi = createApi({
         }),
         invalidatesTags: (result, error, args) => [{ type: "USERS", id: args }],
       }),
+      approveFriendRequest: builder.mutation({
+        query: (requestId) => ({
+          url: API_ROUTES.RESPOND_FRIEND_REQUEST,
+          method: "PUT",
+          body: { requestId, action: "accept" },
+        }),
+      }), // ApproveFriendRequest
+      declineFriendRequest: builder.mutation({
+        query: (requestId) => ({
+          url: API_ROUTES.RESPOND_FRIEND_REQUEST,
+          method: "PUT",
+          body: { requestId, action: "reject" },
+        }),
+      }),
       getFriendRequests: builder.query({
         query: () => {
           return API_ROUTES.GET_FRIEND_REQUESTS;
@@ -227,4 +244,6 @@ export const {
   useSearchUserQuery,
   useSendFriendRequestMutation,
   useGetFriendRequestsQuery,
+  useApproveFriendRequestMutation,
+  useDeclineFriendRequestMutation,
 } = rootApi;

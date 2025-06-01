@@ -1,3 +1,5 @@
+import { useCallback, useState } from "react";
+
 import { useUserInfo } from "@hooks/useUserInfo";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -10,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import { dialogSlice } from "@redux/slices/dialogSlice";
-import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useDispatch } from "react-redux";
 
@@ -90,8 +91,8 @@ export const ImageUploader = ({ image, setImage }) => {
               }}
             >
               {isDragActive
-                ? "Thả ảnh vào đây..."
-                : "Kéo thả ảnh vào đây hoặc nhấp để chọn"}
+                ? "Drop the image here..."
+                : "Drag and drop the image here or click to select"}
             </Typography>
             <Typography
               variant="caption"
@@ -102,7 +103,7 @@ export const ImageUploader = ({ image, setImage }) => {
                 display: "block",
               }}
             >
-              Hỗ trợ: JPG, PNG, GIF (tối đa 10MB)
+              Supported formats: JPG, PNG, GIF (maximum 10MB){" "}
             </Typography>
           </Box>
         </Box>

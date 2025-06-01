@@ -1,5 +1,6 @@
-import { socket } from "@context/SocketProvider";
-import { EVENTS_SOCKET } from "@libs/constants";
+import { useFriendRequestActions } from "@hooks/useFriendRequestActions";
+import { useFriendRequestResp } from "@hooks/useFriendRequestResp";
+import { useFriendRequestSocket } from "@hooks/useFriendRequestSocket";
 import {
   Cancel,
   LocationOn,
@@ -9,17 +10,26 @@ import {
 } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Avatar, Button } from "@mui/material";
-import { useSendFriendRequestMutation } from "@services/rootApi";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const UserCard = ({ fullName = "Minh", requestStatus = "pending", userId }) => {
-  const [sendFriendRequest, { isLoading }] = useSendFriendRequestMutation();
+const UserCard = ({
+  fullName = "Minh",
+  requestStatus = "incoming",
+  userId,
+  refetch,
+  requestId,
+}) => {
+  const {
+    isLoading,
+    handleSendFriendRequest,
+    handleApproveFriendRequest,
+    handleDeclineFriendRequest,
+  } = useFriendRequestActions(refetch);
 
-  const handleSendFriendRequest = async (receiverId) => {
-    await sendFriendRequest(receiverId).unwrap();
-    socket.emit(EVENTS_SOCKET.SEND_FRIEND_REQUEST, { receiverId });
-  };
+  useFriendRequestSocket(refetch); // Hook xử lý socket & toast
+  useFriendRequestResp(refetch);
+
   const renderActions = () => {
     switch (requestStatus) {
       case "accepted":
@@ -51,22 +61,28 @@ const UserCard = ({ fullName = "Minh", requestStatus = "pending", userId }) => {
       case "incoming":
         return (
           <div className="flex gap-2 w-full">
-            <Button
+            <LoadingButton
               variant="contained"
               color="success"
               startIcon={<Check />}
               className="flex-1"
+              onClick={() => handleApproveFriendRequest(requestId, userId)}
+              loading={isLoading}
+              disabled={isLoading}
             >
               Approve
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
               variant="outlined"
               color="error"
               startIcon={<Cancel />}
               className="flex-1"
+              onClick={() => handleDeclineFriendRequest(requestId, userId)}
+              loading={isLoading}
+              disabled={isLoading}
             >
               Decline
-            </Button>
+            </LoadingButton>
           </div>
         );
 

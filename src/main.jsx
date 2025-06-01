@@ -1,3 +1,5 @@
+import { lazy } from "react";
+
 import Dialog from "@components/Dialog";
 import { ThemeProvider } from "@mui/material";
 import AuthLayout from "@pages/auth/AuthLayout";
@@ -8,12 +10,14 @@ import ProtectedLayout from "@pages/ProtectedLayout";
 import RootLayout from "@pages/RootLayout";
 import SearchUserPage from "@pages/SearchUserPage";
 import { persistor, store } from "@redux/store";
-import { lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
+import { Toaster } from "sonner";
+
 import theme from "./configs/muiConfig";
+
 import "./index.css";
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -61,6 +65,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider theme={theme}>
         <RouterProvider router={router} />
         <Dialog />
+        <Toaster
+          position="top-right"
+          richColors
+          toastOptions={{
+            className: "text-base font-semibold",
+            style: {
+              borderRadius: "12px",
+              padding: "12px 16px",
+            },
+          }}
+        />
       </ThemeProvider>
     </PersistGate>
   </Provider>

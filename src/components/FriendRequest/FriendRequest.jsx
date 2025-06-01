@@ -1,31 +1,12 @@
 import FriendRequestItem from "@components/FriendRequest/FriendRequestItem";
-import { socket } from "@context/SocketProvider";
-import { EVENTS_SOCKET } from "@libs/constants";
+import { useFriendRequestSocket } from "@hooks/useFriendRequestSocket";
 import { useGetFriendRequestsQuery } from "@services/rootApi";
-import { useEffect } from "react";
 
 export default function FriendRequest() {
   const { data: result = [], refetch } = useGetFriendRequestsQuery();
-
   const friendRequests = result?.data?.users || [];
 
-  const suggestedFriends = [
-    { id: 5, name: "Hoàng Văn E", mutualFriends: 2 },
-    { id: 6, name: "Vũ Thị F", mutualFriends: 7 },
-    { id: 7, name: "Đặng Văn G", mutualFriends: 4 },
-  ];
-
-  useEffect(() => {
-    socket.on(EVENTS_SOCKET.FRIEND_REQUEST_RECEIVED, (data) => {
-      if (data.from) {
-        refetch();
-      }
-    });
-
-    return () => {
-      socket.off(EVENTS_SOCKET.FRIEND_REQUEST_RECEIVED);
-    };
-  }, [refetch]);
+  useFriendRequestSocket(refetch); // Hook xử lý socket & toast
 
   return (
     <div className="space-y-4">
@@ -33,29 +14,20 @@ export default function FriendRequest() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="p-4 border-b">
           <h2 className="font-semibold text-gray-900 text-base">
-            Lời mời kết bạn
+            Friend Request
           </h2>
         </div>
         <div className="p-3">
+          {friendRequests.length === 0 && (
+            <p className="text-center text-gray-500">Not friend request </p>
+          )}
           {friendRequests.map((request) => (
             <FriendRequestItem
               key={request.senderInfo._id}
               friend={request.senderInfo}
+              requestId={request.requestId}
+              refetch={refetch}
             />
-          ))}
-        </div>
-      </div>
-
-      {/* Có thể bạn biết */}
-      <div className="bg-white rounded-lg shadow-sm border  border-gray-100">
-        <div className="p-4 border-b">
-          <h2 className="font-semibold text-gray-900 text-base">
-            Có thể bạn biết
-          </h2>
-        </div>
-        <div className="p-3">
-          {suggestedFriends.map((friend) => (
-            <FriendRequestItem key={friend.id} friend={friend} />
           ))}
         </div>
       </div>
@@ -63,9 +35,7 @@ export default function FriendRequest() {
       {/* Bạn bè đang online */}
       <div className="bg-white rounded-lg shadow-sm border  border-gray-100">
         <div className="p-4 border-b">
-          <h2 className="font-semibold text-gray-900 text-base">
-            Bạn bè đang online
-          </h2>
+          <h2 className="font-semibold text-gray-900 text-base">Friend List</h2>
         </div>
         <div className="p-3">
           {Array.from({ length: 6 }, (_, i) => (

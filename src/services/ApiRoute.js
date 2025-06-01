@@ -13,6 +13,7 @@ export const API_ROUTES = {
   GET_All_POSTS: "/posts",
   SEND_FRIEND_REQUEST: "/friends/request",
   GET_FRIEND_REQUESTS: "/friends/incoming",
+  RESPOND_FRIEND_REQUEST: "/friends/respond",
   GET_POST_BY_ID: (id) => `/post/${id}`,
   UPDATE_POST: (id) => `/post/update/${id}`,
   DELETE_POST: (id) => `/post/delete/${id}`,

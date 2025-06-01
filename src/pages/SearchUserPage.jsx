@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 const SearchUserPage = () => {
   const location = useLocation();
-  const { data, isLoading } = useSearchUserQuery({
+  const { data, isLoading, refetch } = useSearchUserQuery({
     limit: 8,
     offset: 1,
     keyword: location?.state?.searchQuery,
@@ -61,12 +61,14 @@ const SearchUserPage = () => {
               userId={user._id}
               fullName={user.name}
               requestStatus={user.requestStatus}
+              refetch={refetch}
+              requestId={user.requestId}
             />
           ))}
         </div>
       ) : (
         <p className="text-center font-semibold text-gray-600 mt-8">
-          Không tìm thấy người dùng
+          No user found
         </p>
       )}
     </div>
