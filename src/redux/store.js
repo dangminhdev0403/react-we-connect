@@ -12,7 +12,9 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
 import authReducer from "./slices/authSlice";
+import chatReducer from "./slices/chatSlice";
 import dialogReducer from "./slices/dialogSlice";
 import settingReducer from "./slices/settingSlice";
 import snackbarReducer from "./slices/snackbarSlice";
@@ -29,6 +31,7 @@ const persistedReducer = persistReducer(
   combineReducers({
     auth: authReducer,
     snackbar: snackbarReducer,
+    chat: chatReducer,
     setting: settingReducer,
     dialog: dialogReducer,
     [rootApi.reducerPath]: rootApi.reducer,

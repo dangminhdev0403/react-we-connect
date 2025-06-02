@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+
+import MyAvatar from "@components/Avatar/MyAvatar";
 import { useUserInfo } from "@hooks/useUserInfo";
 import {
   DarkMode as DarkModeIcon,
@@ -36,7 +39,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { authSlice } from "@redux/slices/authSlice";
 import { settingSlice } from "@redux/slices/settingSlice";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -251,13 +253,10 @@ const Header = ({ darkMode, toggleDarkMode }) => {
               </Badge>
             </IconButton>
 
-            {/* User Menu */}
-            <IconButton onClick={handleUserMenuClick} color="inherit">
-              <Avatar sx={{ width: 32, height: 32 }}>
-                {userInfo.name?.[0].toUpperCase()}
-              </Avatar>
-            </IconButton>
-
+            <MyAvatar
+              name={userInfo.name}
+              handleUserMenuClick={handleUserMenuClick}
+            />
             {/* Mobile Menu - Sử dụng toggleDrawer từ props */}
             {isMobile && (
               <IconButton

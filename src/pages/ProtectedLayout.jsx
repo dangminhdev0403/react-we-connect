@@ -19,7 +19,7 @@ const ProtectedLayout = () => {
   }, [data?.data, isSuccess, dispath]);
   if (isLoading || isFetching) {
     // Có thể return loading UI ở đây
-    return <p>Đang tải...</p>;
+    return <p className="text-center">Loading...</p>;
   }
 
   if (!isAuthenticated) {

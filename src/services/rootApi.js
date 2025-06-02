@@ -46,7 +46,7 @@ export const rootApi = createApi({
   // process is not defined in the browser, but vite replaces it with import.meta.env
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["POSTS", "USERS"],
+  tagTypes: ["POSTS", "USERS", "FRIENDS"],
   endpoints: (builder) => {
     return {
       register: builder.mutation({
@@ -192,6 +192,24 @@ export const rootApi = createApi({
               ]
             : [{ type: "USERS", id: "LIST" }],
       }),
+      getFriendList: builder.query({
+        query: ({ offset = 0, limit = 5 } = {}) => {
+          return {
+            url: `${API_ROUTES.GET_FRIEND_LIST}`,
+            params: { offset, limit },
+          };
+        },
+        providesTags: (result) =>
+          result?.data?.friends
+            ? [
+                ...result.data.friends.map((friend) => ({
+                  type: "FRIENDS",
+                  id: friend._id,
+                })),
+                { type: "FRIENDS", id: "LIST" },
+              ]
+            : [{ type: "FRIENDS", id: "LIST" }],
+      }),
       sendFriendRequest: builder.mutation({
         query: (receiverId) => ({
           url: API_ROUTES.SEND_FRIEND_REQUEST,
@@ -206,6 +224,10 @@ export const rootApi = createApi({
           method: "PUT",
           body: { requestId, action: "accept" },
         }),
+        invalidatesTags: [
+          { type: "PENDING_FRIEND_REQUEST", id: "LIST" },
+          { type: "FRIENDS", id: "LIST" },
+        ],
       }), // ApproveFriendRequest
       declineFriendRequest: builder.mutation({
         query: (requestId) => ({
@@ -213,6 +235,10 @@ export const rootApi = createApi({
           method: "PUT",
           body: { requestId, action: "reject" },
         }),
+        invalidatesTags: [
+          { type: "PENDING_FRIEND_REQUEST", id: "LIST" },
+          { type: "FRIENDS", id: "LIST" },
+        ],
       }),
       getFriendRequests: builder.query({
         query: () => {
@@ -246,4 +272,5 @@ export const {
   useGetFriendRequestsQuery,
   useApproveFriendRequestMutation,
   useDeclineFriendRequestMutation,
+  useGetFriendListQuery,
 } = rootApi;

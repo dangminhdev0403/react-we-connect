@@ -1,6 +1,7 @@
+import { Suspense } from "react";
+
 import { Alert, Snackbar } from "@mui/material";
 import { closeSnackbar } from "@redux/slices/snackbarSlice";
-import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 

@@ -11,6 +11,7 @@ export const API_ROUTES = {
   SEARCH_USER: "/users/search",
   CREATE_POST: "/posts",
   GET_All_POSTS: "/posts",
+  GET_FRIEND_LIST: "/friends/myfriends",
   SEND_FRIEND_REQUEST: "/friends/request",
   GET_FRIEND_REQUESTS: "/friends/incoming",
   RESPOND_FRIEND_REQUEST: "/friends/respond",

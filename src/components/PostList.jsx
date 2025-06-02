@@ -1,9 +1,10 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import Post from "@components/Post";
 import { useGetAllPostsQuery } from "@services/rootApi";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { throttle } from "lodash";
-import { useEffect, useMemo, useRef, useState } from "react";
 
 const PostList = () => {
   const limit = 5;
@@ -58,7 +59,7 @@ const PostList = () => {
         setOffset((prev) => prev + 1);
       }
     }, 1000);
-  }, [hasMore, isFetching]);
+  }, [hasMore, isFetching, offset]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -69,7 +70,7 @@ const PostList = () => {
   }, [handleScroll]);
 
   if (isLoading && offset === 1) {
-    return <div>Loading posts...</div>;
+    return <div className="text-center">Loading posts...</div>;
   }
 
   return (
