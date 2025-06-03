@@ -1,6 +1,6 @@
 import { useFriendRequestActions } from "@hooks/useFriendRequestActions";
-import { useFriendRequestResp } from "@hooks/useFriendRequestResp";
 import { useFriendRequestSocket } from "@hooks/useFriendRequestSocket";
+import { useSocketReceiver } from "@hooks/useSocketReceiver";
 import {
   Cancel,
   LocationOn,
@@ -28,7 +28,7 @@ const UserCard = ({
   } = useFriendRequestActions(refetch);
 
   useFriendRequestSocket(refetch); // Hook xử lý socket & toast
-  useFriendRequestResp(refetch);
+  useSocketReceiver(refetch);
 
   const renderActions = () => {
     switch (requestStatus) {

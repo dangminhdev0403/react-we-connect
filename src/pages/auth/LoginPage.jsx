@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -5,7 +7,6 @@ import { Button, CircularProgress } from "@mui/material";
 import { authSlice } from "@redux/slices/authSlice";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { useLoginMutation } from "@services/rootApi";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";

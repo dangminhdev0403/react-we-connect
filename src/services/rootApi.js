@@ -46,7 +46,7 @@ export const rootApi = createApi({
   // process is not defined in the browser, but vite replaces it with import.meta.env
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["POSTS", "USERS", "FRIENDS"],
+  tagTypes: ["POSTS", "USERS", "FRIENDS", "CHATS"],
   endpoints: (builder) => {
     return {
       register: builder.mutation({
@@ -193,7 +193,7 @@ export const rootApi = createApi({
             : [{ type: "USERS", id: "LIST" }],
       }),
       getFriendList: builder.query({
-        query: ({ offset = 0, limit = 5 } = {}) => {
+        query: ({ offset = 1, limit = 5 } = {}) => {
           return {
             url: `${API_ROUTES.GET_FRIEND_LIST}`,
             params: { offset, limit },
@@ -255,6 +255,35 @@ export const rootApi = createApi({
               ]
             : [{ type: "PENDING_FRIEND_REQUEST", id: "LIST" }],
       }),
+      getSimpleMessage: builder.query({
+        query: ({ receiverId, offset = 0, limit = 5 }) => {
+          return {
+            url: `${API_ROUTES.GET_SINGLE_MESSAGES}/${receiverId}`,
+            params: { offset, limit },
+          };
+        },
+        providesTags: (result) =>
+          result?.data?.messages
+            ? [
+                ...result.data.messages.map((message) => ({
+                  type: "SIMPLE_MESSAGES",
+                  id: message._id,
+                })),
+                { type: "SIMPLE_MESSAGES", id: "LIST" },
+              ]
+            : [{ type: "SIMPLE_MESSAGES", id: "LIST" }],
+      }),
+      sendSingleMessage: builder.mutation({
+        query: (dataForm) => ({
+          url: API_ROUTES.SEND_SINGLE_MESSAGES,
+          method: "POST",
+          body: dataForm,
+        }),
+        invalidatesTags: [
+          { type: "SIMPLE_MESSAGES", id: "LIST" },
+          { type: "USERS", id: "LIST" },
+        ],
+      }),
     };
   },
 });
@@ -273,4 +302,6 @@ export const {
   useApproveFriendRequestMutation,
   useDeclineFriendRequestMutation,
   useGetFriendListQuery,
+  useGetSimpleMessageQuery,
+  useSendSingleMessageMutation,
 } = rootApi;

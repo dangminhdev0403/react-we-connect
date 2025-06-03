@@ -1,90 +1,74 @@
-"use client";
+import { useEffect, useMemo, useRef } from "react";
 
-import { useEffect, useRef, useState } from "react";
-
+import { useSocketSender } from "@hooks/socket/useSocketSender";
+import { useSocketReceiver } from "@hooks/useSocketReceiver";
 import { chatSlice } from "@redux/slices/chatSlice";
-import {
-  Check,
-  CheckCheck,
-  Minus,
-  Phone,
-  Send,
-  Smile,
-  Video,
-  X,
-} from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useGetSimpleMessageQuery } from "@services/rootApi";
+import dayjs from "dayjs";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import { Minus, Phone, Send, Smile, Video, X } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function ChatBox({ user }) {
+function ChatBox({ user }) {
+  const offset = 1;
+  const limit = 8;
+  const receiverId = useMemo(() => user?._id, [user]);
+  const senderId = useSelector((state) => state.auth.user.id);
+  console.log("senderId", senderId);
+  console.log("receiverId", receiverId);
+
+  const { control, handleSubmit, reset, watch } = useForm();
+  const { sendMessage } = useSocketSender();
+
+  const { data, isLoading, refetch } = useGetSimpleMessageQuery({
+    receiverId,
+    offset,
+    limit,
+  });
+  useSocketReceiver(refetch);
+  const messageList = data?.data?.messages || [];
+
+  const messageValue = watch("message") || "";
+
   const dispatch = useDispatch();
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "Chào bạn! Bạn có rảnh không?",
-      sender: "other",
-      timestamp: "14:30",
-      status: "read",
-    },
-    {
-      id: 2,
-      text: "Chào! Mình đang rảnh. Có chuyện gì vậy?",
-      sender: "user",
-      timestamp: "14:32",
-      status: "read",
-    },
-    {
-      id: 3,
-      text: "Mình muốn hỏi về dự án tuần tới",
-      sender: "other",
-      timestamp: "14:33",
-      status: "delivered",
-    },
-  ]);
-  const [newMessage, setNewMessage] = useState("");
-  const messagesEndRef = useRef(null);
 
+  const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, []);
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (newMessage.trim()) {
-      const message = {
-        id: Date.now(),
-        text: newMessage,
-        sender: "user",
-        timestamp: new Date().toLocaleTimeString("vi-VN", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        status: "sent",
-      };
-      setMessages([...messages, message]);
-      setNewMessage("");
-    }
+  const handleSendMessage = (formData) => {
+    const dataForm = new FormData();
+
+    dataForm.append("content", formData.message);
+    dataForm.append("receiverId", receiverId);
+
+    sendMessage(dataForm);
+    reset(); // Reset form sau khi gửi
   };
 
   const handleClose = () => {
     dispatch(chatSlice.actions.closeChat(user._id));
   };
 
-  const renderStatus = (status) => {
-    switch (status) {
-      case "sent":
-        return <Check className="h-3 w-3 text-gray-400" />;
-      case "delivered":
-        return <CheckCheck className="h-3 w-3 text-gray-400" />;
-      case "read":
-        return <CheckCheck className="h-3 w-3 text-blue-500" />;
-      default:
-        return null;
-    }
-  };
+  // const renderStatus = (status) => {
+  //   switch (status) {
+  //     case "sent":
+  //       return <Check className="h-3 w-3 text-gray-400" />;
+  //     case "delivered":
+  //       return <CheckCheck className="h-3 w-3 text-gray-400" />;
+  //     case "read":
+  //       return <CheckCheck className="h-3 w-3 text-blue-500" />;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   const handleMinimazed = () => {
     dispatch(chatSlice.actions.toggleMinimizeChat(user._id));
@@ -127,25 +111,42 @@ export default function ChatBox({ user }) {
       </div>
 
       {/* Messages */}
-      <div className="h-[370px] overflow-y-auto p-3 space-y-2">
-        {messages.map((message) => (
+      <div
+        className={` h-[370px] overflow-y-auto p-3 space-y-2 flex flex-col ${
+          isLoading ? "justify-center" : "justify-end"
+        } `}
+      >
+        {isLoading && (
+          <div className="mt-6 flex justify-center">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="h-10 w-10 rounded-full border-4 border-t-blue-500 border-gray-200 "
+            />
+          </div>
+        )}
+        {messageList.map((message) => (
           <div
-            key={message.id}
+            key={message._id}
             className={`flex ${
-              message.sender === "user" ? "justify-end" : "justify-start"
+              message.sender._id.toString() === senderId
+                ? "justify-end"
+                : "justify-start"
             }`}
           >
             <div
               className={`max-w-[70%] px-3 py-2 rounded-lg ${
-                message.sender === "user"
+                message.sender._id.toString() === senderId
                   ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white"
                   : "bg-gray-100 text-gray-800"
               }`}
             >
-              <p className="text-sm">{message.text}</p>
+              <p className="text-sm">{message.content}</p>
               <div className="flex items-center gap-1 mt-1">
-                <span className="text-xs opacity-70">{message.timestamp}</span>
-                {message.sender === "user" && renderStatus(message.status)}
+                <span className="text-xs opacity-70">
+                  {dayjs(message.createdAt).format("HH:mm DD/MM/YYYY")}
+                </span>
+                {/* {message.sender !== receiverId && renderStatus(message.status)} */}
               </div>
             </div>
           </div>
@@ -155,14 +156,21 @@ export default function ChatBox({ user }) {
 
       {/* Input */}
       <div className="p-3 border-t">
-        <form onSubmit={handleSendMessage} className="flex gap-2">
-          <input
+        <form onSubmit={handleSubmit(handleSendMessage)} className="flex gap-2">
+          <Controller
             type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Nhập tin nhắn..."
-            className="flex-1 px-3 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            name="message"
+            defaultValue=""
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                placeholder="Nhập tin nhắn..."
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
           />
+
           <button
             type="button"
             className="p-2 text-gray-500 hover:text-gray-700 rounded-full"
@@ -171,11 +179,11 @@ export default function ChatBox({ user }) {
           </button>
           <button
             type="submit"
-            disabled={!newMessage.trim()}
+            disabled={!messageValue.trim()}
             className={`p-2 rounded-full transition-colors ${
-              newMessage.trim()
+              messageValue.trim()
                 ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white"
-                : "bg-gray-200 text-gray-400"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
           >
             <Send className="w-4 h-4" />
@@ -185,3 +193,5 @@ export default function ChatBox({ user }) {
     </div>
   );
 }
+
+export default ChatBox;

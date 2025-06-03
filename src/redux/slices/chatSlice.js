@@ -10,8 +10,10 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     openChatWith(state, action) {
-      const exists = state.openChats.find(
-        (chat) => chat.user._id === action.payload._id
+      const userId = action.payload._id.toString();
+
+      const exists = state.openChats?.find(
+        (chat) => chat.user._id.toString() === userId
       );
 
       if (!exists) {

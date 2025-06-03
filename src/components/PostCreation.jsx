@@ -210,7 +210,6 @@ const PostCreation = () => {
         variant="outlined"
         placeholder="What's on your mind?"
         onClick={openPopup}
-        inputProps={{ readOnly: true }}
         sx={{
           "& .MuiInputBase-root": {
             borderRadius: "999px",

@@ -6,4 +6,9 @@ export const EVENTS_SOCKET = {
   SEND_FRIEND_REQUEST: "sendFriendRequest",
   FRIEND_REQUEST_APPROVED: "friendRequestApproved",
   FRIEND_REQUEST_DECLINED: "friendRequestDeclined",
+  SEND_MESSAGE: "sendSessage",
+  MESSAGE_RECEIVED: "messageReceived",
+  CHAT_BOX_QUERY: "chatBoxQuery",
+  CHAT_BOX_RESPONSE: "chatBoxResponse",
+  CHAT_BOX_ERROR: "chatBoxError",
 };

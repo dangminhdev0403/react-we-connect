@@ -11,13 +11,17 @@ const FriendRequestItem = ({
   isRequest = true,
 }) => {
   const dispatch = useDispatch();
+  // dispatch(authSlice.actions.logOut());
+
   const { isLoading, handleApproveFriendRequest, handleDeclineFriendRequest } =
     useFriendRequestActions(refetch);
   const showChatBox = (friend) => {
-    console.log("friend", friend);
-
     dispatch(chatSlice.actions.openChatWith(friend));
   };
+  if (!friend) {
+    console.warn("FriendRequestItem: friend is undefined");
+    return null; // hoặc loading/error UI
+  }
   return (
     <>
       {!isRequest ? (

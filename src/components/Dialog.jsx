@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { ImageUploader } from "@components/PostCreation";
 import {
   Avatar,
@@ -14,7 +16,6 @@ import {
 import { dialogSlice } from "@redux/slices/dialogSlice";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { useCreatePostMutation } from "@services/rootApi";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Đổi tên từ PostCreation → PostDialogContent
