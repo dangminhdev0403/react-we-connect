@@ -7,6 +7,6 @@ import tsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [react(), tsConfigPaths(), tailwindcss()],
   server: {
-    allowedHosts: ["0db8-42-113-152-212.ngrok-free.app"], // ✅ Thêm dòng này
+    allowedHosts: ["5c61-42-113-152-212.ngrok-free.app"], // ✅ Thêm dòng này
   },
 });
